@@ -6,19 +6,33 @@ public class Player_behaviour : MonoBehaviour
 {
     [Header("Movement Variables")]
     [SerializeField]
-    private float speed = 5f;
+    private float speed;
 
     [SerializeField]
-    private float jumpSpeed = 8f;
+    private float maxSpeed;
 
     [SerializeField]
-    private float gravity = 20f;
+    private float movementAcelleration;
+
+    [SerializeField]
+    private float movementDeacelleration;
+
+    [SerializeField]
+    private float jumpSpeed;
+
+    [SerializeField]
+    private float gravity;
 
     [SerializeField]
     private float rotateSpeed;
 
+    [Header("Camera")]
     [SerializeField]
     private Camera mainCamera;
+
+    private bool doubleJump = false;
+
+    private bool tripleJump = false;
 
     private CharacterController controller;
     private Rigidbody playerRigidbody;
@@ -41,6 +55,7 @@ public class Player_behaviour : MonoBehaviour
     {
         MoveCharacter();
         RotateCharacter();
+        JumpCharacter();
     }
     private void MoveCharacter()
     {
@@ -53,9 +68,45 @@ public class Player_behaviour : MonoBehaviour
 
         direction.Normalize();
 
+        if(Input_manager._INPUT_MANAGER.GetLeftAxisButonPressed())
+        {
+            speed = speed + movementAcelleration * Time.deltaTime;
+        }
+        else
+        {
+            speed = speed - movementDeacelleration * Time.deltaTime;
+            if (speed < 0f)
+            {
+                speed = 0f;
+            }
+        }
+        if (speed >= maxSpeed)
+        {
+            speed = maxSpeed;
+        }
+
         finalSpeed.x = direction.x * speed;
         finalSpeed.z = direction.z * speed;
 
+        controller.Move(finalSpeed * Time.deltaTime);
+    }
+
+    private void RotateCharacter()
+    {
+        Vector3 rotateInput = Input_manager._INPUT_MANAGER.GetRightAxisValue();
+        if(rotateInput != null)
+        {
+            rotationX = rotateInput.y;
+            rotationY = rotateInput.x;
+        }
+
+        rotation = new Vector3(rotationX, rotationY, rotateInput.z) * rotateSpeed;
+
+        transform.Rotate(rotation);
+    }
+
+    private void JumpCharacter()
+    {
         //Apply gravity
         direction.y = -1f;
 
@@ -63,7 +114,9 @@ public class Player_behaviour : MonoBehaviour
         {
             if (Input_manager._INPUT_MANAGER.GetJumpButtonPressed())
             {
-                finalSpeed.y = jumpSpeed;
+                Debug.Log("Single");
+                finalSpeed.y += jumpSpeed;
+                doubleJump = true;
             }
             else
             {
@@ -73,23 +126,20 @@ public class Player_behaviour : MonoBehaviour
         else
         {
             finalSpeed.y += direction.y * gravity * Time.deltaTime;
+            if (Input_manager._INPUT_MANAGER.GetJumpButtonPressed() && doubleJump)
+            {
+                Debug.Log("Doble");
+                finalSpeed.y += jumpSpeed;
+                tripleJump = true;
+                doubleJump = false;
+            }
+            //if (Input_manager._INPUT_MANAGER.GetJumpButtonPressed() && tripleJump)
+            //{
+            //    Debug.Log("Triple");
+            //    finalSpeed.y += jumpSpeed;
+            //    doubleJump = false;
+            //    tripleJump = true;
+            //}
         }
-
-        controller.Move(finalSpeed * Time.deltaTime);
-    }
-
-    private void RotateCharacter()
-    {
-        Vector2 rotateInput = Input_manager._INPUT_MANAGER.GetRightAxisValue();
-        if(rotateInput != null)
-        {
-            rotationX = rotateInput.y;
-            rotationY = rotateInput.x;
-        }
-        
-        rotationX = Mathf.Clamp(rotationX, -50f, 50f);
-
-        transform.eulerAngles = new Vector3(rotationX, rotationY, 0);
-        //transform.position
     }
 }

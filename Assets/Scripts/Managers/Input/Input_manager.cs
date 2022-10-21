@@ -11,7 +11,7 @@ public class Input_manager : MonoBehaviour
 
     private float timeSinceJumpPressed = 0f;
     private Vector2 leftAxisValue = Vector2.zero;
-    private Vector2 rightAxisValue = Vector2.zero;
+    private Vector3 rightAxisValue = Vector3.zero;
 
     private void Awake()
     {
@@ -36,7 +36,6 @@ public class Input_manager : MonoBehaviour
     private void Update()
     {
         timeSinceJumpPressed += Time.deltaTime;
-
         InputSystem.Update();
     }
 
@@ -58,6 +57,10 @@ public class Input_manager : MonoBehaviour
         rightAxisValue = context.ReadValue<Vector2>();
     }
 
+    public bool GetLeftAxisButonPressed()
+    {
+        return playerInputs.Character.Move.IsPressed();
+    }
     public bool GetJumpButtonPressed()
     {
         return timeSinceJumpPressed == 0f;
@@ -68,7 +71,7 @@ public class Input_manager : MonoBehaviour
         return leftAxisValue;
     }
 
-    public Vector2 GetRightAxisValue()
+    public Vector3 GetRightAxisValue()
     {
         return rightAxisValue;
     }
