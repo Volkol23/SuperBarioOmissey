@@ -12,6 +12,8 @@ public class Input_manager : MonoBehaviour
     private float timeSinceJumpPressed = 0f;
     private Vector2 leftAxisValue = Vector2.zero;
     private Vector3 rightAxisValue = Vector3.zero;
+    [SerializeField]
+    bool crouchButtonIsBeingHold;
 
     private void Awake()
     {
@@ -27,6 +29,9 @@ public class Input_manager : MonoBehaviour
             playerInputs.Character.Jump.performed += JumpButtonPressed;
             playerInputs.Character.Move.performed += LeftAxisValue;
             playerInputs.Character.CameraRotate.performed += RightAxisValue;
+
+            playerInputs.Character.Crouch.performed += CrouchButtonIsBeingHold;
+            playerInputs.Character.Crouch.canceled += CrouchButtonIsNotBeingHold;
 
             _INPUT_MANAGER = this;
             DontDestroyOnLoad(_INPUT_MANAGER);
@@ -57,6 +62,16 @@ public class Input_manager : MonoBehaviour
         rightAxisValue = context.ReadValue<Vector2>();
     }
 
+    private void CrouchButtonIsBeingHold(InputAction.CallbackContext context)
+    {
+        crouchButtonIsBeingHold = true;
+    }
+
+    private void CrouchButtonIsNotBeingHold(InputAction.CallbackContext context)
+    {
+        crouchButtonIsBeingHold = false;
+    }
+
     public bool GetLeftAxisButonPressed()
     {
         return playerInputs.Character.Move.IsPressed();
@@ -74,5 +89,10 @@ public class Input_manager : MonoBehaviour
     public Vector3 GetRightAxisValue()
     {
         return rightAxisValue;
+    }
+
+    public bool GetCrouchButtonHold()
+    {
+        return crouchButtonIsBeingHold;
     }
 }
