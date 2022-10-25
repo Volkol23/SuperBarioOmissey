@@ -30,9 +30,6 @@ public class Player_behaviour : MonoBehaviour
     private bool isCrouching;
 
     [SerializeField]
-    private float colliderHeight;
-
-    [SerializeField]
     private float crouchSpeed;
 
     [Header("Camera")]
@@ -44,6 +41,10 @@ public class Player_behaviour : MonoBehaviour
 
     [SerializeField]
     private float mouseSensivity;
+
+    [Header("Animation")]
+    [SerializeField]
+    private Animator playerAnimator;
 
     private bool doubleJump = false;
 
@@ -63,8 +64,7 @@ public class Player_behaviour : MonoBehaviour
     {
         controller = GetComponent<CharacterController>();
         playerRigidbody = GetComponent<Rigidbody>();
-        capsuleCollider = GetComponent<CapsuleCollider>();
-        colliderHeight = capsuleCollider.height;
+        playerAnimator = GetComponent<Animator>();
     }
     // Update is called once per frame
     void Update()
@@ -83,8 +83,7 @@ public class Player_behaviour : MonoBehaviour
         }
         else
         {
-            capsuleCollider.height = colliderHeight;
-            controller.height = 2f;
+            //controller.height = 2f;
             isCrouching = false;
         }
     }
@@ -132,6 +131,9 @@ public class Player_behaviour : MonoBehaviour
         finalSpeed.z = direction.z * speed;
 
         controller.Move(finalSpeed * Time.deltaTime);
+
+        //Animation
+        playerAnimator.SetFloat("Speed", speed);
     }
 
     private void RotateCharacter()
@@ -160,6 +162,7 @@ public class Player_behaviour : MonoBehaviour
             if (Input_manager._INPUT_MANAGER.GetJumpButtonPressed())
             {
                 Debug.Log("Single");
+                playerAnimator.SetTrigger("SingleJump");
                 finalSpeed.y += jumpSpeed;
                 doubleJump = true;
             }
@@ -192,7 +195,6 @@ public class Player_behaviour : MonoBehaviour
     {
         isCrouching = true;
         //Cambiar tamaño de z y el tamaño del collider
-        capsuleCollider.height = 1;
-        controller.height = 1;
+        //controller.height = 1;
     }
 }
