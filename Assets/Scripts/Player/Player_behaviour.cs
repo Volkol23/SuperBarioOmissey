@@ -32,6 +32,9 @@ public class Player_behaviour : MonoBehaviour
     [SerializeField]
     private float crouchSpeed;
 
+    [SerializeField]
+    private float bounceForce;
+
     [Header("Camera")]
     [SerializeField]
     private Camera mainCamera;
@@ -138,6 +141,7 @@ public class Player_behaviour : MonoBehaviour
 
     private void RotateCharacter()
     {
+        transform.forward = cameraTarget.transform.forward;
         float rotationX = cameraTarget.transform.rotation.x;
         float rotationY = cameraTarget.transform.rotation.y;
         Vector3 rotateInput = Input_manager._INPUT_MANAGER.GetRightAxisValue();
@@ -196,5 +200,18 @@ public class Player_behaviour : MonoBehaviour
         isCrouching = true;
         //Cambiar tamaño de z y el tamaño del collider
         //controller.height = 1;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        Debug.Log("Collision");
+        if(collision.gameObject.tag == "JumpPlatform")
+        {
+            playerRigidbody.AddForce(playerRigidbody.transform.up * bounceForce);
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Trigger");
     }
 }
