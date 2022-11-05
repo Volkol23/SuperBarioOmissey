@@ -46,7 +46,7 @@ public class Input_manager : MonoBehaviour
 
     private void JumpButtonPressed(InputAction.CallbackContext context)
     {
-        Debug.Log("JumpButtonPressed");
+        //Debug.Log("JumpButtonPressed");
         timeSinceJumpPressed = 0f;
     }
 

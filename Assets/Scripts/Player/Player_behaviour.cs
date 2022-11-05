@@ -40,9 +40,6 @@ public class Player_behaviour : MonoBehaviour
     private Camera mainCamera;
 
     [SerializeField]
-    private GameObject cameraTarget;
-
-    [SerializeField]
     private float mouseSensivity;
 
     [Header("Animation")]
@@ -68,6 +65,7 @@ public class Player_behaviour : MonoBehaviour
         controller = GetComponent<CharacterController>();
         playerRigidbody = GetComponent<Rigidbody>();
         playerAnimator = GetComponent<Animator>();
+        mouseSensivity = mainCamera.GetComponent<CameraPlayer>().mouseSensivity;
     }
     // Update is called once per frame
     void Update()
@@ -141,19 +139,17 @@ public class Player_behaviour : MonoBehaviour
 
     private void RotateCharacter()
     {
-        transform.forward = cameraTarget.transform.forward;
-        float rotationX = cameraTarget.transform.rotation.x;
-        float rotationY = cameraTarget.transform.rotation.y;
-        Vector3 rotateInput = Input_manager._INPUT_MANAGER.GetRightAxisValue();
+        if(finalSpeed.magnitude != 0)
+        {
+            Vector3 rotateInput = Input_manager._INPUT_MANAGER.GetRightAxisValue();
+            transform.Rotate(Vector3.up * rotateInput.x * mouseSensivity * Time.deltaTime);
 
-        rotationX += rotateInput.y * mouseSensivity;
-        rotationY += rotateInput.x * mouseSensivity;
+            Quaternion cameraRotation = mainCamera.transform.rotation;
+            cameraRotation.x = 0f;
+            cameraRotation.z = 0f;
 
-        //rotationX = Mathf.Clamp(rotationX, -50f, 50f);
-
-        rotation = new Vector3(rotationX, rotationY, 0);
-
-        cameraTarget.transform.rotation = Quaternion.Euler(rotation);
+            transform.rotation = Quaternion.Lerp(transform.rotation, cameraRotation, 0.1f);
+        }
     }
 
     private void JumpCharacter()
@@ -165,7 +161,7 @@ public class Player_behaviour : MonoBehaviour
         {
             if (Input_manager._INPUT_MANAGER.GetJumpButtonPressed())
             {
-                Debug.Log("Single");
+                //Debug.Log("Single");
                 playerAnimator.SetTrigger("SingleJump");
                 finalSpeed.y += jumpSpeed;
                 doubleJump = true;
@@ -180,7 +176,7 @@ public class Player_behaviour : MonoBehaviour
             finalSpeed.y += direction.y * gravity * Time.deltaTime;
             if (Input_manager._INPUT_MANAGER.GetJumpButtonPressed() && doubleJump)
             {
-                Debug.Log("Doble");
+                //Debug.Log("Doble");
                 finalSpeed.y += jumpSpeed;
                 tripleJump = true;
                 doubleJump = false;

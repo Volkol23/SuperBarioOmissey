@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PointsObject : MonoBehaviour
 {
+    [SerializeField]
+    private float angleRotation;
     // Start is called before the first frame update
     void Start()
     {
@@ -13,6 +15,6 @@ public class PointsObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        transform.rotation *= Quaternion.AngleAxis(angleRotation, transform.up);
     }
 }

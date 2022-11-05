@@ -4,13 +4,9 @@ using UnityEngine;
 
 public class JumpPlatform : MonoBehaviour
 {
-    [SerializeField]
-    private float bounceForce;
-
-    private Rigidbody jumpPlatformRigidbody;
     private void Awake()
     {
-        jumpPlatformRigidbody = GetComponent<Rigidbody>();
+        
     }
 
     // Update is called once per frame
