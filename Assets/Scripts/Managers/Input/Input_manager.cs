@@ -13,7 +13,7 @@ public class Input_manager : MonoBehaviour
     private Vector2 leftAxisValue = Vector2.zero;
     private Vector3 rightAxisValue = Vector3.zero;
     [SerializeField]
-    bool crouchButtonIsBeingHold;
+    private bool crouchButtonIsBeingHold;
 
     private void Awake()
     {

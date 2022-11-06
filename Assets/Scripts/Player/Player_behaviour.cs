@@ -201,13 +201,14 @@ public class Player_behaviour : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Collision");
-        if(collision.gameObject.tag == "JumpPlatform")
-        {
-            playerRigidbody.AddForce(playerRigidbody.transform.up * bounceForce);
-        }
+
     }
     private void OnTriggerEnter(Collider other)
     {
         Debug.Log("Trigger");
+        if (other.gameObject.tag == "JumpPlatform")
+        {
+            playerRigidbody.AddForce(playerRigidbody.transform.up * bounceForce);
+        }
     }
 }

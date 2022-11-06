@@ -17,4 +17,13 @@ public class PointsObject : MonoBehaviour
     {
         transform.rotation *= Quaternion.AngleAxis(angleRotation, transform.up);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Player")
+        {
+            GameManager._GAME_MANAGER.UpdatePoints();
+            Destroy(gameObject, 0.3f);
+        }
+    }
 }

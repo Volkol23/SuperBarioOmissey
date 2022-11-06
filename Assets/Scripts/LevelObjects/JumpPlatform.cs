@@ -4,14 +4,19 @@ using UnityEngine;
 
 public class JumpPlatform : MonoBehaviour
 {
-    private void Awake()
+    private Rigidbody jumpRigidbody;
+
+    private void Start()
     {
-        
+        jumpRigidbody = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter(Collider other)
     {
-        
+        if (other.gameObject.tag == "Player")
+        {
+            Debug.Log("TriggerPlayer");
+            jumpRigidbody.AddForce(jumpRigidbody.transform.up * 500f);
+        }
     }
 }
