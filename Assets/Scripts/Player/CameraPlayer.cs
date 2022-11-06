@@ -38,5 +38,6 @@ public class CameraPlayer : MonoBehaviour
 
         transform.eulerAngles = new Vector3(rotationX, rotationY, 0);
         transform.position = cameraLookAt.transform.position - transform.forward * distanceToTarget;
+
     }
 }

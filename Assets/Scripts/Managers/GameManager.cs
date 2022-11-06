@@ -25,4 +25,14 @@ public class GameManager : MonoBehaviour
     {
         gamePoints++;
     }
+
+    public void ResetPoints()
+    {
+        gamePoints = 0;
+    }
+
+    public void ResetSpawns()
+    {
+        //Reset Point Sapwns
+    }
 }

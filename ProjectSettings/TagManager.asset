@@ -6,6 +6,7 @@ TagManager:
   tags:
   - JumpPlatform
   - PointsObjects
+  - Death
   layers:
   - Default
   - TransparentFX

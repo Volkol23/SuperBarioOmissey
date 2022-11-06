@@ -35,6 +35,9 @@ public class Player_behaviour : MonoBehaviour
     [SerializeField]
     private float bounceForce;
 
+    [SerializeField]
+    private GameObject spawnPoint;
+
     [Header("Camera")]
     [SerializeField]
     private Camera mainCamera;
@@ -52,13 +55,9 @@ public class Player_behaviour : MonoBehaviour
 
     private CharacterController controller;
     private Rigidbody playerRigidbody;
-    private CapsuleCollider capsuleCollider;
 
     private Vector3 finalSpeed = Vector3.zero;
     private Vector3 direction = Vector3.zero;
-
-    private Vector3 finalRotation = Vector3.zero;
-    private Vector3 rotation = Vector3.zero;
 
     private void Awake()
     {
@@ -201,7 +200,7 @@ public class Player_behaviour : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Collision");
-
+        
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -209,6 +208,15 @@ public class Player_behaviour : MonoBehaviour
         if (other.gameObject.tag == "JumpPlatform")
         {
             playerRigidbody.AddForce(playerRigidbody.transform.up * bounceForce);
+        }
+
+        if (other.gameObject.tag == "Death")
+        {
+            Debug.Log("DeathTouch");
+            
+            //transform.position = spawnPoint.transform.position;
+            controller.transform.position = spawnPoint.transform.position;
+            GameManager._GAME_MANAGER.ResetPoints();
         }
     }
 }
