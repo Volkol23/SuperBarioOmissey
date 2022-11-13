@@ -26,18 +26,34 @@ public class CameraPlayer : MonoBehaviour
     [SerializeField]
     private float rotationY = 0f;
 
-    private void Update()
+    [SerializeField]
+    private float cameraLerp = 12f;
+
+    private void LateUpdate()
+    {
+        CameraMovememnt();
+
+    }
+
+    void CameraMovememnt()
     {
         Vector3 rotateInput = Input_manager._INPUT_MANAGER.GetRightAxisValue();
         if (rotateInput.magnitude != 0)
         {
-            rotationX += rotateInput.y * mouseSensivity * Time.deltaTime;
-            rotationY += rotateInput.x * mouseSensivity * Time.deltaTime;
+            rotationX += rotateInput.y * mouseSensivity;
+            rotationY += rotateInput.x * mouseSensivity;
         }
         rotationX = Mathf.Clamp(rotationX, XMinRotation, XMaxRotation);
 
         transform.eulerAngles = new Vector3(rotationX, rotationY, 0);
-        transform.position = cameraLookAt.transform.position - transform.forward * distanceToTarget;
+        Vector3 finalPosition = Vector3.Lerp(transform.position, cameraLookAt.transform.position - transform.forward * distanceToTarget, cameraLerp * Time.deltaTime);
 
+        RaycastHit hit;
+        if(Physics.Linecast(cameraLookAt.transform.position, finalPosition, out hit))
+        {
+            finalPosition = hit.point;
+        }
+
+        transform.position = finalPosition;
     }
 }

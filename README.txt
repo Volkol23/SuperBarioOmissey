@@ -1,0 +1,1 @@
+- El prefab del suelo esta en IGNORE (añado el collider)

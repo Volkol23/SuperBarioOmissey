@@ -93,7 +93,7 @@ public class Player_behaviour : MonoBehaviour
         Vector2 directionInput = Input_manager._INPUT_MANAGER.GetLeftAxisValue();
         if (directionInput != null)
         {
-            direction = directionInput.y * mainCamera.transform.forward + directionInput.x * mainCamera.transform.right;
+            direction = Quaternion.Euler(0f, mainCamera.transform.eulerAngles.y, 0f) * new Vector3(directionInput.x, 0f, directionInput.y);
         }
 
         direction.Normalize();
