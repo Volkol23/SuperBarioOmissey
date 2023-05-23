@@ -54,7 +54,6 @@ public class Player_behaviour : MonoBehaviour
     private bool tripleJump = false;
 
     private CharacterController controller;
-    private Rigidbody playerRigidbody;
 
     private Vector3 finalSpeed = Vector3.zero;
     private Vector3 direction = Vector3.zero;
@@ -62,7 +61,6 @@ public class Player_behaviour : MonoBehaviour
     private void Awake()
     {
         controller = GetComponent<CharacterController>();
-        playerRigidbody = GetComponent<Rigidbody>();
         playerAnimator = GetComponent<Animator>();
         mouseSensivity = mainCamera.GetComponent<CameraPlayer>().mouseSensivity;
     }
@@ -204,10 +202,11 @@ public class Player_behaviour : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
+        //Cambiar de rigidbody a con character controller
         Debug.Log("Trigger");
         if (other.gameObject.tag == "JumpPlatform")
         {
-            playerRigidbody.AddForce(playerRigidbody.transform.up * bounceForce);
+            //playerRigidbody.AddForce(playerRigidbody.transform.up * bounceForce);
         }
 
         if (other.gameObject.tag == "Death")
