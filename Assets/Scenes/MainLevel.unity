@@ -3204,6 +3204,9 @@ MonoBehaviour:
   crouchSpeed: 3
   bounceForce: 500
   spawnPoint: {fileID: 1752285854}
+  jumpTimeWindow: 1
+  currentJumpTime: 0
+  jumpDone: 0
   mainCamera: {fileID: 276111974}
   mouseSensivity: 2
   playerAnimator: {fileID: 0}

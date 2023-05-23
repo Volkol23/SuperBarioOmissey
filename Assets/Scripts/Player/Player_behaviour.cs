@@ -38,6 +38,14 @@ public class Player_behaviour : MonoBehaviour
     [SerializeField]
     private GameObject spawnPoint;
 
+    [Header("JumpTimer")]
+    [SerializeField]
+    private float jumpTimeWindow;
+    [SerializeField]
+    private float currentJumpTime = 0f;
+    [SerializeField]
+    private bool jumpDone = false;
+
     [Header("Camera")]
     [SerializeField]
     private Camera mainCamera;
@@ -72,6 +80,7 @@ public class Player_behaviour : MonoBehaviour
 
     private void HandleMovement()
     {
+        playerAnimator.SetBool("Grounded", controller.isGrounded);
         MoveCharacter();
         RotateCharacter();
         JumpCharacter();
@@ -149,16 +158,31 @@ public class Player_behaviour : MonoBehaviour
         }
     }
 
+    private void CheckJumpWindow()
+    {
+        if (currentJumpTime >= jumpTimeWindow || controller.isGrounded)
+        {
+            jumpDone = true;
+            playerAnimator.SetTrigger("WindowEnd");
+        }
+    }
     private void JumpCharacter()
     {
         //Apply gravity
         direction.y = -1f;
 
+        
+        currentJumpTime += Time.deltaTime;
+       
         if (controller.isGrounded)
         {
             if (Input_manager._INPUT_MANAGER.GetJumpButtonPressed())
             {
-                //Debug.Log("Single");
+                jumpDone = false;
+                tripleJump = false;
+                currentJumpTime = 0f;
+                Debug.Log("Single");
+                playerAnimator.SetBool("Grounded", controller.isGrounded);
                 playerAnimator.SetTrigger("SingleJump");
                 finalSpeed.y += jumpSpeed;
                 doubleJump = true;
@@ -166,25 +190,30 @@ public class Player_behaviour : MonoBehaviour
             else
             {
                 finalSpeed.y = direction.y * gravity * Time.deltaTime;
+                jumpDone = true;
+                CheckJumpWindow();
             }
         }
         else
         {
             finalSpeed.y += direction.y * gravity * Time.deltaTime;
-            if (Input_manager._INPUT_MANAGER.GetJumpButtonPressed() && doubleJump)
+            CheckJumpWindow();
+            if (Input_manager._INPUT_MANAGER.GetJumpButtonPressed() && tripleJump && !jumpDone)
             {
-                //Debug.Log("Doble");
+                Debug.Log("Triple");
+                playerAnimator.SetTrigger("TripleJump");
+                finalSpeed.y += jumpSpeed;
+                doubleJump = false;
+                tripleJump = false;
+            }
+            if (Input_manager._INPUT_MANAGER.GetJumpButtonPressed() && doubleJump && !jumpDone)
+            {
+                Debug.Log("Doble");
+                playerAnimator.SetTrigger("DoubleJump");
                 finalSpeed.y += jumpSpeed;
                 tripleJump = true;
                 doubleJump = false;
             }
-            //if (Input_manager._INPUT_MANAGER.GetJumpButtonPressed() && tripleJump)
-            //{
-            //    Debug.Log("Triple");
-            //    finalSpeed.y += jumpSpeed;
-            //    doubleJump = false;
-            //    tripleJump = true;
-            //}
         }
     }
 
